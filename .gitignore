@@ -1,0 +1,11 @@
+# NodeJS Stuff
+node_modules
+package-lock.json
+
+# User Stuff
+user_modules
+config.json
+db.json*
+
+# Bot Stuff
+!/templates/*

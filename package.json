@@ -1,0 +1,16 @@
+{
+  "name": "EvalynBot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EvalynGoemer",
+  "license": "MIT",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "discord.js": "^14.24.2",
+    "emoji-regex": "^10.6.0"
+  }
+}
