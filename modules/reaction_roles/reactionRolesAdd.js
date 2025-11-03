@@ -20,7 +20,7 @@ export default {
                 const role = guild.roles.cache.get(reactionRole.role_id);
                 await member.roles.add(role)
             }
-            catch(error) {
+            catch (error) {
                 return;
             }
         } catch (error) {

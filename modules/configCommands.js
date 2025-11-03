@@ -61,7 +61,7 @@ export default {
                     }
 
                     server.linkCleanupEnabled = server.linkCleanupEnabled ? false : true;
-                    await message.reply(server.linkCleanupEnabled ? "Link cleanup has been Enabled" : "Link cleanup has been Disabled" );
+                    await message.reply(server.linkCleanupEnabled ? "Link cleanup has been Enabled" : "Link cleanup has been Disabled");
                 } else {
                     await message.reply("You don't have permission to use this command.");
                 }

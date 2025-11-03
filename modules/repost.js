@@ -15,9 +15,9 @@ export default {
                 if (content.length > 0) {
                     await message.channel.send(content);
                 }
-                
+
                 if (message.attachments.size > 0) {
-                    await message.channel.send({files: [`${message.attachments.first().url}`]})
+                    await message.channel.send({ files: [`${message.attachments.first().url}`] })
                 }
 
                 message.delete();

@@ -6,8 +6,6 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 
-
-
 function blockingWait(seconds) {
     const start = Date.now();
     while (Date.now() - start < seconds * 1000) {
@@ -17,7 +15,7 @@ function blockingWait(seconds) {
 for (let i = 10; i != 0; i--) {
     console.log("Starting in " + i + " seconds.")
     if (!config.skipStartupDelay) {
-      blockingWait(1);
+        blockingWait(1);
     }
 }
 
@@ -29,29 +27,29 @@ try {
 }
 
 process.on('exit', () => {
-  try {
-    fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
-  } catch (err) {
-    console.error('Failed to save db.json on exit:', err);
-  }
+    try {
+        fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
+    } catch (err) {
+        console.error('Failed to save db.json on exit:', err);
+    }
 });
 
 process.on('SIGINT', () => {
-  try {
-    fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
-  } catch (err) {
-    console.error('Failed to save db.json on SIGINT:', err);
-  }
-  process.exit();
+    try {
+        fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
+    } catch (err) {
+        console.error('Failed to save db.json on SIGINT:', err);
+    }
+    process.exit();
 });
 
 process.on('SIGTERM', () => {
-  try {
-    fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
-  } catch (err) {
-    console.error('Failed to save db.json on SIGTERM:', err);
-  }
-  process.exit();
+    try {
+        fs.writeFileSync("./db.json", JSON.stringify(global.db, null, 2), 'utf8');
+    } catch (err) {
+        console.error('Failed to save db.json on SIGTERM:', err);
+    }
+    process.exit();
 });
 
 const client = new Client({

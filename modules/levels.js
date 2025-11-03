@@ -1,21 +1,21 @@
 import { Events, } from 'discord.js';
 
 function levelFromXp(xpTotal) {
-  let lvl = 0;
+    let lvl = 0;
 
-  while (true) {
-    const xpForNextLevel = (5 * lvl * (lvl - 1) * (2 * lvl - 1)) / 6 + (50 * lvl * (lvl - 1)) / 2 + 100 * lvl;
+    while (true) {
+        const xpForNextLevel = (5 * lvl * (lvl - 1) * (2 * lvl - 1)) / 6 + (50 * lvl * (lvl - 1)) / 2 + 100 * lvl;
 
-    if (xpForNextLevel > xpTotal) {
-      return lvl - 1;
+        if (xpForNextLevel > xpTotal) {
+            return lvl - 1;
+        }
+
+        lvl++;
+
+        if (lvl > 999) {
+            return "MAX"
+        }
     }
-
-    lvl++;
-
-    if (lvl > 999) {
-        return "MAX"
-    }
-  }
 }
 
 export default {

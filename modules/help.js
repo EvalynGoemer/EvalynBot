@@ -14,6 +14,7 @@ export default {
                 `
 ===== USER COMMANDS =====
 !help - Shows this message
+!level - Shows your level and xp
 !steal {emoji_to_steal} - Gives the image or gif of an emoji
 ===== ADMIN COMMANDS =====
 !purge {x 1 to 99} - Deletes x messages

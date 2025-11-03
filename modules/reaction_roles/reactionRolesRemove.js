@@ -20,7 +20,7 @@ export default {
                 const member = await guild.members.fetch(user.id);
                 const role = guild.roles.cache.get(reactionRole.role_id);
                 await member.roles.remove(role)
-            } catch(error) {
+            } catch (error) {
             }
         } catch (error) {
             console.error('Error in reactionRolesRemove.js: ', error);

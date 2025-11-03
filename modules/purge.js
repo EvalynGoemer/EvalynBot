@@ -16,7 +16,7 @@ export default {
 
             let amount = parseInt(args[0]) + 1;
 
-            if(amount == 101) {
+            if (amount == 101) {
                 amount = 100
             }
 
@@ -27,8 +27,8 @@ export default {
             try {
                 const deletedMessages = await message.channel.bulkDelete(amount, true);
                 message.channel
-                .send(`Successfully deleted ${deletedMessages.size} messages.`)
-                .then((msg) => setTimeout(() => msg.delete(), 5000));
+                    .send(`Successfully deleted ${deletedMessages.size} messages.`)
+                    .then((msg) => setTimeout(() => msg.delete(), 5000));
             } catch (error) {
                 console.error("Error in purge.js: ", error);
                 message.reply('There was an error trying to purge messages in this channel.');

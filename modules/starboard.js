@@ -41,7 +41,7 @@ export default {
                 })
                 .setDescription(reaction.message.content || null)
                 .setTimestamp()
-                .setFooter({ text: `Channel: #${reaction.message.channel.name} | ID: ${reaction.message.id}` });
+                .setFooter({ text: `Channel: #${reaction.message.channel.name} | ID: ${reaction.message.id}`});
 
                 let hasVideo = false
                 if (reaction.message.attachments.size > 0) {

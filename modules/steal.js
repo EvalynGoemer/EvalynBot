@@ -14,7 +14,7 @@ function getEmojiInfo(input) {
         }
     } else {
         match = emojiRegex.exec(input);
-        if(match) {
+        if (match) {
             let emojiName = match[1];
             let id = match[2];
             return { "type": 'Normal', "name": emojiName, "id": id };
@@ -36,7 +36,7 @@ export default {
             let emojiData;
             try {
                 emojiData = getEmojiInfo(message.content)
-            } catch(e) {
+            } catch (e) {
                 message.reply('Please provide a valid emoji to steal.');
                 return;
             }
