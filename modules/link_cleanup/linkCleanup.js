@@ -25,6 +25,7 @@ function URLSanitizer(text) {
     return text.replace(urlRegex, (match) => {
         try {
             let u = new URL(match);
+            const hadTrailingSlash = match.endsWith('/');
 
             for (const [original, mapped] of Object.entries(DOMAIN_MAP)) {
                 if (u.hostname === original || u.hostname.endsWith("." + original)) {
@@ -57,7 +58,12 @@ function URLSanitizer(text) {
                 }
             }
 
-            return u.toString();
+            let sanitized = u.toString();
+            if (!hadTrailingSlash && sanitized.endsWith('/')) {
+                sanitized = sanitized.slice(0, -1);
+            }
+
+            return sanitized;
         } catch {
             return match;
         }
