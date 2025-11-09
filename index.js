@@ -6,10 +6,15 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 
+import events from 'events';
+
+events.EventEmitter.prototype._maxListeners = 100;
+
 function blockingWait(seconds) {
     const start = Date.now();
     while (Date.now() - start < seconds * 1000) {
     }
+
 }
 
 for (let i = 10; i != 0; i--) {
