@@ -12,9 +12,17 @@ function URLSanitizer(text) {
         "share_id"
     ]);
 
+    const DOMAIN_BLOCKED_PARAMS = {
+        "x.com": ["t", "s"],
+        "twitter.com": ["t", "s"],
+        "vxtwitter.com": ["t", "s"],
+        "fixupx.com": ["t", "s"]
+    };
+
     const DOMAIN_MAP = {
-        "x.com": "vxtwitter.com",
-        "twitter.com": "vxtwitter.com",
+        "x.com": "fixupx.com",
+        "twitter.com": "fixupx.com",
+        "vxtwitter.com": "fixupx.com",
         "tiktok.com": "vxtiktok.com",
         "instagram.com": "kkinstagram.com",
         "reddit.com": "vxreddit.com",
@@ -38,6 +46,23 @@ function URLSanitizer(text) {
                 u.hostname = DOMAIN_MAP[u.hostname];
             }
 
+            for (let param of [...u.searchParams.keys()]) {
+                if (BLOCKED_PARAMS.has(param)) {
+                    u.searchParams.delete(param);
+                }
+            }
+
+            for (let [domain, blockedParams] of Object.entries(DOMAIN_BLOCKED_PARAMS)) {
+                if (u.hostname.includes(domain)) {
+                    for (let param of blockedParams) {
+                        u.searchParams.delete(param);
+                    }
+                }
+            }
+
+            // final sanitization pass
+            let sanitized = u.toString();
+
             // amazon specific rules
             if (u.hostname.includes("amazon.")) {
                 let asin = null;
@@ -52,13 +77,18 @@ function URLSanitizer(text) {
                 }
             }
 
-            for (let param of [...u.searchParams.keys()]) {
-                if (BLOCKED_PARAMS.has(param)) {
-                    u.searchParams.delete(param);
+            // twitter & co specific rules
+            // TODO: add config options for server language
+            if (u.hostname.includes("fixupx.com")) {
+                if (!sanitized.endsWith("/en") && !sanitized.endsWith("/en/")) {
+                    if (sanitized.endsWith('/')) {
+                        sanitized += "en";
+                    } else {
+                        sanitized += "/en";
+                    }
                 }
             }
 
-            let sanitized = u.toString();
             if (!hadTrailingSlash && sanitized.endsWith('/')) {
                 sanitized = sanitized.slice(0, -1);
             }
