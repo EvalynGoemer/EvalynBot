@@ -1,4 +1,6 @@
 {
     "skipStartupDelay": false,
+    "uptimePushURL": "OPTIONAL URL",
+    "uptimePushInterval": 50000,
     "token": "BOT TOKEN HERE"
 }

@@ -37,6 +37,11 @@ The following features / modules are included
 - Starboard
 - Steal Emojis
 
+### Uptime Monitoring
+Fill in `uptimePushURL` and `uptimePushInterval` in the config fie with a URL from a tool such as uptime kuma and an interval in miliseconds and the bot will
+send the proper heartbeat to your uptime monitor
+
+
 ## Making Modules
 This bot is structured similar to the [discord.js tutorial](https://discordjs.guide/legacy/app-creation/handling-events) but then modified to suit my needs
 
