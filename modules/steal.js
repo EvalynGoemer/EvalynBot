@@ -41,6 +41,11 @@ export default {
                 return;
             }
 
+            if (emojiData == null) {
+                message.reply('Please provide a valid emoji to steal.');
+                return;
+            }
+
             if (emojiData.type === "Animated") {
                 message.reply(`https://cdn.discordapp.com/emojis/${emojiData.id}.gif?animated=true`)
             } else {

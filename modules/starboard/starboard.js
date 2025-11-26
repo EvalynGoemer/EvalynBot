@@ -13,6 +13,10 @@ export default {
 
             const server = global.db.servers.find(server => server.server_id === reaction.message.guild.id)
 
+            if (server == null) {
+                return;
+            }
+
             if (server.starboard_emoji_id == null) {
                 server.starboard_emoji_id = "⭐"
             }

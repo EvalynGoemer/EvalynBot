@@ -10,6 +10,24 @@ import events from 'events';
 
 events.EventEmitter.prototype._maxListeners = 100;
 
+const originalLog = console.log;
+
+console.log = function(...args) {
+    const date = new Date()
+
+    const timestamp = new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+    }).format(date).replace(',', '');
+
+    originalLog.apply(console, [`[${timestamp}]`, ...args]);
+};
+
 function blockingWait(seconds) {
     const start = Date.now();
     while (Date.now() - start < seconds * 1000) {
