@@ -1,4 +1,4 @@
-import { Events, Message, TextChannel, PermissionsBitField } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, ChannelType, InteractionContextType } from 'discord.js';
 import emojiRegex from 'emoji-regex';
 
 interface discordEmioji {
@@ -29,72 +29,48 @@ function getEmojiInfo(input: string): discordEmioji {
 
 export default class SetupStarboard implements botModule {
     name = "SetupStarboard";
-    version = "1.1"
-    type = Events.MessageCreate;
+    version = "1.2"
+    type = null;
     once = false;
-    async execute(message: Message) {
-        if (message.author.bot) return;
+    slashCommand = new SlashCommandBuilder()
+    .setName('setup_starboard')
+    .setDescription("Sets up the server starboard")
+    .addChannelOption((option) => option.setName("channel").setDescription("The channel for the starboard to be in").setRequired(true).addChannelTypes(ChannelType.GuildText))
+    .addStringOption((option) => option.setName("emoji").setDescription("Emoiji to count for putting things on the starboard").setRequired(true))
+    .addNumberOption((option) => option.setName("number").setDescription("The number of reactions of the starboard emoji needed to pin").setRequired(true).setMinValue(1).setMaxValue(100))
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .setContexts(InteractionContextType.Guild);
+    async execute(interaction: ChatInputCommandInteraction) {
 
-        const args = message.content.split(/\s+/);
-        const command = args.shift()?.toLowerCase();
-
-        if (command === "!setupstarboard") {
-            if (!(message.channel instanceof TextChannel)) return;
-            if (!message.member?.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-                await message.reply("You don't have permission to use this command.");
-                return;
-            }
-
-            let server = global.db.servers.find(server => server.server_id === message.guild?.id);
+            let server = global.db.servers.find(server => server.server_id === interaction.guild?.id);
             if (!server) {
-                await message.reply("Please use !initServer to register the server in the database")
+                await interaction.reply("Please use /initServer to register the server in the database")
                 return;
             }
 
-            let starboardChannelID = null
             let starbordEmojiID = null
-            let starboardReactionThreshold = null
-            const channel = global.client.channels.cache.get(String(args[0]));
-            if (!channel) {
-                await message.reply("Channel ID is invalid.")
-                await message.channel.send("Please use the command correctly !setupStarboard {starboard_channel_id} {starboard_emoji} {starboard_reaction_threshold}")
-                return;
-            }
-            if (!(channel instanceof TextChannel)) {
-                await message.reply("Channel ID is invalid. Ensure it is a text channel inside a guild.")
-                return;
-            }
-            if (channel.guildId != server.server_id) {
-                await message.reply("Channel ID is not from this server. Nice try ;3")
-                return;
-            }
-            starboardChannelID = String(args[0])
-
-            let emojiInfo = getEmojiInfo(args[1] ?? "")
+            let emojiString = interaction.options.getString("emoji")!;
+            let emojiInfo = getEmojiInfo(emojiString)
             if (emojiInfo.valid == true) {
                 starbordEmojiID = emojiInfo.id
             } else {
-                if (args[1] != null && (args[1].match(emojiRegex()) || []).length === 1) {
-                    starbordEmojiID = args[1]
+                if (emojiString != null && (emojiString.match(emojiRegex()) || []).length === 1) {
+                    starbordEmojiID = emojiString
                 } else {
-                    await message.reply("Emoji is invalid.");
-                    await message.channel.send("Please use the command correctly !setupStarboard {starboard_channel_id} {starboard_emoji} {starboard_reaction_threshold}")
+                    await interaction.reply("Emoji is invalid.");
                     return;
                 }
             }
 
-            starboardReactionThreshold = parseInt(args[2] ?? "3")
-
-            if (isNaN(starboardReactionThreshold) || starboardReactionThreshold < 1 || starboardReactionThreshold > 100) {
-                await message.reply("Starboard Reaction Threshold is invalid or not between 1 and 100.")
-                await message.channel.send("Please use the command correctly !setupStarboard {starboard_channel_id} {starboard_emoji} {starboard_reaction_threshold}")
+            let channel = interaction.options.getChannel("channel");
+            if (channel == null) {
+                await interaction.reply("Error: Channel could not be found")
                 return;
             }
 
-            server.starboard_channel_id = starboardChannelID
+            server.starboard_channel_id = channel.id
             server.starboard_emoji_id = starbordEmojiID
-            server.starboard_reaction_threshold = starboardReactionThreshold
-            await message.reply("Starboard is now setup!")
-        }
+            server.starboard_reaction_threshold = interaction.options.getNumber("number")!
+            await interaction.reply("Starboard is now setup!")
     }
 }

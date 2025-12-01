@@ -1,4 +1,10 @@
-import { Client, Events } from 'discord.js';
+import { Client, Collection, Events, SlashCommandBuilder } from 'discord.js';
+
+declare module "discord.js" {
+    interface Client {
+        commands: Collection<string, botModule>;
+    }
+}
 
 declare global {
     var client: Client
@@ -10,8 +16,11 @@ declare global {
         uptimePushURL: string;
         uptimePushMaxRetries: number;
         uptimePushtimeoutMs: number;
-        uptimePushInterval: number
+        uptimePushInterval: number;
         token: string;
+        clientId: string;
+        devMode: boolean;
+        guildId: string;
     }
 
     export interface jsonDatabase {
@@ -49,6 +58,7 @@ declare global {
         version: string;
         type: ClientEvents;
         once: boolean;
+        slashCommand?: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
         execute(...args: any[]): void;
     }
 }

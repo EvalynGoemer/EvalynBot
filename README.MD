@@ -17,6 +17,7 @@ Run `npm install` to download the libraries needed to run as follows
 - `emoji-regex`
 
 Run the TypeScript Compile `tsc` and if not installed use `npm install -g typescript` or your distros package manager  
+Run `node ./compiled-ts/deploy-commands.js` to register slash commands (do this every update)  
 Run `node ./compiled-ts` to run the bot
 
 You should use [PM2](https://pm2.keymetrics.io/) to run the bot and have it auto restart if it crashes  
@@ -46,7 +47,7 @@ send the proper heartbeat to your uptime monitor
 ## Making Modules
 This bot is structured similar to the [discord.js tutorial](https://discordjs.guide/legacy/app-creation/handling-events) but then modified to suit my needs
 
-Look at `/templates/module.ts` for an example module to base your others off of aswell `/modules` has plenty of modules to look at for reference  
+Look at `/templates/module.ts` and `/templates/moduleSlashCommand.ts` for an example module to base your others off of aswell `/modules` has plenty of modules to look at for reference  
 `/templates/module.js` has a template for "legacy modules" which lack certain metadata needed for other features (eg will not support slash commands)
 
 Modules that need more than one file to be complete eg needing more than one event should be in a folder
@@ -63,5 +64,6 @@ Yes TypeScript. The bot has now been rewritten in TypeScript!
 ~~I made this bot to be easy and quick to prototype in and TypeScript would make some stuff take longer feel free to make your own modules in TypeScript and i might convert some of the existing ones at some point Tomorrow™~~
 
 ### Slash Commands?
-These are being worked on for the next update!  
+These have now been implemented!  
+~~These are being worked on for the next update!~~  
 ~~I am not currently in a hurry to implement them as my bot works good enough for *now* for me but i will certainly add them at some point Tomorrow™~~

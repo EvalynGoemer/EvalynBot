@@ -24,7 +24,7 @@ function URLSanitizer(text: string) {
         "twitter.com": "fixupx.com",
         "vxtwitter.com": "fixupx.com",
         "tiktok.com": "vxtiktok.com",
-        "instagram.com": "kkinstagram.com",
+        "instagram.com": "vxinstagram.com",
         "reddit.com": "vxreddit.com",
     };
 

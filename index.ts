@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 
 import config from "./config.json" with {type: "json"}
 
@@ -112,6 +112,7 @@ for (const dir of modulesDirs) {
     }
 }
 
+client.commands = new Collection();
 for (const filePath of modulesFiles) {
     const module = await import(filePath);
     let botModule: botModule;
@@ -130,7 +131,14 @@ for (const filePath of modulesFiles) {
         botModule = module.default;
     }
 
-    if (!botModule || !botModule.type || !botModule.execute) continue;
+    if (!botModule || !botModule.execute) continue;
+
+    if (botModule.slashCommand != null && botModule.execute != null) {
+        client.commands.set(botModule.slashCommand.name, botModule);
+        continue;
+    }
+
+    if (!botModule || !botModule.type) continue;
 
     if (botModule.once === true) {
         client.once(botModule.type, (...args) => botModule.execute(...args));

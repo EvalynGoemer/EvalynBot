@@ -1,4 +1,4 @@
-import { Events, Message } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 
 interface discordEmioji {
     valid: boolean;
@@ -10,7 +10,7 @@ interface discordEmioji {
 function getEmojiInfo(input: string): discordEmioji {
     const emojiRegex = /<(a)?:([ -~]+):([0-9]+)>/
     let match = emojiRegex.exec(input);
-    let result: discordEmioji = {valid: false, animated: false, name: "INVALID", id: "INVALID"};
+    let result: discordEmioji = { valid: false, animated: false, name: "INVALID", id: "INVALID" };
 
     if (match?.[0]) {
         if (match[1] === "a") {
@@ -18,7 +18,7 @@ function getEmojiInfo(input: string): discordEmioji {
         }
 
         result.name = match[2]!;
-        result.id =  match[3]!;
+        result.id = match[3]!;
 
         result.valid = true;
     }
@@ -28,33 +28,25 @@ function getEmojiInfo(input: string): discordEmioji {
 
 export default class Steal implements botModule {
     name = "Steal";
-    version = "1.1";
-    type = Events.MessageCreate;
+    version = "1.2";
+    type = null;
     once = false;
-    async execute(message: Message) {
-        if (message.author.bot) return;
+    slashCommand = new SlashCommandBuilder()
+    .setName('steal')
+    .setDescription("Steal an emoji (Provides the image file)")
+    .addStringOption((option) => option.setName("emoji").setDescription("Emoji to be stolen").setRequired(true))
+    async execute(interaction: ChatInputCommandInteraction) {
+        let emojiData: discordEmioji = getEmojiInfo(interaction.options.getString("emoji")!)
 
-        const args = message.content.split(/\s+/);
-        const command = args.shift()?.toLowerCase();
+        if (emojiData.valid == false) {
+            interaction.reply('Please provide a valid emoji to steal.');
+            return;
+        }
 
-        if (command === "!steal") {
-            if (args[0] === undefined) {
-                message.reply('Please provide an emoji to steal.');
-                return;
-            }
-
-            let emojiData: discordEmioji = getEmojiInfo(args[0])
-
-            if (emojiData.valid == false) {
-                message.reply('Please provide a valid emoji to steal.');
-                return;
-            }
-
-            if (emojiData.animated == true) {
-                message.reply(`https://cdn.discordapp.com/emojis/${emojiData.id}.gif?animated=true`)
-            } else {
-                message.reply(`https://cdn.discordapp.com/emojis/${emojiData.id}.png`)
-            }
+        if (emojiData.animated == true) {
+            interaction.reply(`https://cdn.discordapp.com/emojis/${emojiData.id}.gif?animated=true`)
+        } else {
+            interaction.reply(`https://cdn.discordapp.com/emojis/${emojiData.id}.png`)
         }
     }
 };
