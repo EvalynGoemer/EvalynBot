@@ -1,6 +1,6 @@
-import { Events, MessageFlags } from 'discord.js';
+import { Events, Message, TextChannel, MessageFlags } from 'discord.js';
 
-function URLSanitizer(text) {
+function URLSanitizer(text: string) {
     const BLOCKED_PARAMS = new Set([
         "si",
         "utm_source",
@@ -19,7 +19,7 @@ function URLSanitizer(text) {
         "fixupx.com": ["t", "s"]
     };
 
-    const DOMAIN_MAP = {
+    const DOMAIN_MAP: Record<string, string> = {
         "x.com": "fixupx.com",
         "twitter.com": "fixupx.com",
         "vxtwitter.com": "fixupx.com",
@@ -42,8 +42,8 @@ function URLSanitizer(text) {
                 }
             }
 
-            if (DOMAIN_MAP[u.hostname]) {
-                u.hostname = DOMAIN_MAP[u.hostname];
+            if (u.hostname in DOMAIN_MAP) {
+                u.hostname = DOMAIN_MAP[u.hostname]!;
             }
 
             for (let param of [...u.searchParams.keys()]) {
@@ -100,30 +100,31 @@ function URLSanitizer(text) {
     });
 }
 
-export default {
-    name: Events.MessageCreate,
-    once: false,
-    async execute(message) {
+export default class LinkCleanup implements botModule {
+    name = "LinkCleanup";
+    version = "1.0";
+    type = Events.MessageCreate;
+    once = false;
+    async execute(message: Message) {
         if (message.author.bot) return;
 
-        try {
-            let server = global.db.servers.find(server => server.server_id === message.guild.id);
-            if (server.linkCleanupEnabled == null) {
-                server.linkCleanupEnabled = false;
-            }
+        let server = global.db.servers.find(server => server.server_id === message.guild?.id);
+        if (server == null) return;
 
-            if (server.linkCleanupEnabled == true) {
-                const sanitizedContent = URLSanitizer(message.content);
-                if (sanitizedContent !== message.content) {
-                    await message.delete();
-                    await message.channel.send({
-                        content: `${message.author} sent a message with bad links, message content with sanitized links:\n${sanitizedContent}`,
-                        flags: [MessageFlags.SuppressNotifications]
-                    }
-                    );
-                }
-            }
-        } catch (e) {
+        if (server.linkCleanupEnabled == null) {
+            server.linkCleanupEnabled = false;
         }
-    },
-};
+
+        if (server.linkCleanupEnabled == true) {
+            const sanitizedContent = URLSanitizer(message.content);
+            if (sanitizedContent !== message.content) {
+                await message.delete();
+                if (!(message.channel instanceof TextChannel)) return;
+                await message.channel.send({
+                    content: `${message.author} sent a message with bad links, message content with sanitized links:\n${sanitizedContent}`,
+                    flags: [MessageFlags.SuppressNotifications]
+                });
+            }
+        }
+    }
+}

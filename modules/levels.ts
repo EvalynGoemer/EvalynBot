@@ -1,6 +1,6 @@
-import { Events, } from 'discord.js';
+import { Events, Message } from 'discord.js';
 
-function levelFromXp(xpTotal) {
+function levelFromXp(xpTotal: number): number | string {
     let lvl = 0;
 
     while (true) {
@@ -18,24 +18,21 @@ function levelFromXp(xpTotal) {
     }
 }
 
-export default {
-    name: Events.MessageCreate,
-    once: false,
-    async execute(message) {
+export default class Levels implements botModule {
+    name = "Levels";
+    version = "1.0";
+    type = Events.MessageCreate;
+    once = false;
+    async execute(message: Message) {
         if (message.author.bot) return;
 
         const args = message.content.split(/\s+/);
-        const command = args.shift().toLowerCase();
+        const command = args.shift()?.toLowerCase();
 
-        const server = global.db.servers.find(server => server.server_id === message.guild.id)
+        const server = global.db.servers.find(server => server.server_id === message.guild?.id)
 
-        if (server == null) {
-            return;
-        }
-
-        if (server.users == null) {
-            server.users = []
-        }
+        if (server == null) return;
+        if (server.users == null) server.users = [];
 
         let user = server.users.find(user => user.id === message.author.id);
 
@@ -57,5 +54,5 @@ export default {
         if (command === "!level") {
             message.reply(`You are level ${levelFromXp(user.xp)} (XP: ${user.xp})`)
         }
-    },
+    }
 };

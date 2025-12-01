@@ -1,6 +1,8 @@
 {
     "skipStartupDelay": false,
     "uptimePushURL": "OPTIONAL URL",
+    "uptimePushMaxRetries": 3,
+    "uptimePushtimeoutMs": 1000,
     "uptimePushInterval": 60000,
     "token": "BOT TOKEN HERE"
 }

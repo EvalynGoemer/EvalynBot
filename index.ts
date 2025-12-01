@@ -4,11 +4,11 @@ import config from "./config.json" with {type: "json"}
 
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { fileURLToPath } from 'url';
 
-import events from 'events';
+import { setMaxListeners } from 'events';
 
-events.EventEmitter.prototype._maxListeners = 100;
+setMaxListeners(100)
 
 const originalLog = console.log;
 
@@ -28,7 +28,7 @@ console.log = function(...args) {
     originalLog.apply(console, [`[${timestamp}]`, ...args]);
 };
 
-function blockingWait(seconds) {
+function blockingWait(seconds: number) {
     const start = Date.now();
     while (Date.now() - start < seconds * 1000) {
     }
@@ -90,7 +90,9 @@ const __dirname = path.dirname(__filename);
 
 const modulesDirs = [
     path.join(__dirname, 'modules'),
-    path.join(__dirname, 'user_modules')
+    path.join(__dirname, '../modules'),
+    path.join(__dirname, 'user_modules'),
+    path.join(__dirname, '../user_modules')
 ];
 
 let modulesFiles = [];
@@ -100,6 +102,7 @@ for (const dir of modulesDirs) {
     const stack = [dir];
     while (stack.length) {
         const current = stack.pop();
+        if (current == undefined) break;
         for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
             const fullPath = path.join(current, entry.name);
             if (entry.isDirectory()) stack.push(fullPath);
@@ -110,11 +113,30 @@ for (const dir of modulesDirs) {
 }
 
 for (const filePath of modulesFiles) {
-    const module = await import(pathToFileURL(filePath));
-    const event = module.default;
-    if (!event?.name || !event?.execute) continue;
-    if (event.once) client.once(event.name, (...args) => event.execute(...args));
-    else client.on(event.name, (...args) => event.execute(...args));
+    const module = await import(filePath);
+    let botModule: botModule;
+
+    if (typeof module.default === 'function') {
+        const ModuleClass = module.default;
+        botModule = new ModuleClass();
+
+        console.log(`Loading Module: ${botModule.name}`);
+        console.log(`          Path: ${filePath}`);
+        console.log(`       Version: ${botModule.version}`);
+        console.log(`          Type: ${botModule.type}`);
+        console.log(`          Once: ${botModule.once}`);
+    } else {
+        console.log(`Loading Legacy Module from ${filePath}`);
+        botModule = module.default;
+    }
+
+    if (!botModule || !botModule.type || !botModule.execute) continue;
+
+    if (botModule.once === true) {
+        client.once(botModule.type, (...args) => botModule.execute(...args));
+    } else {
+        client.on(botModule.type, (...args) => botModule.execute(...args));
+    }
 }
 
 client.login(config.token);

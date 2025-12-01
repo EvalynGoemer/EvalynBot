@@ -1,17 +1,20 @@
-import { Events, PermissionsBitField } from 'discord.js';
+import { Events, Message, PermissionsBitField } from 'discord.js';
 
-export default {
-    name: Events.MessageCreate,
-    once: false,
-    async execute(message) {
+export default class ToggleLinkCleanup implements botModule{
+    name = "ToggleLinkCleanup";
+    version = "1.0";
+    type = Events.MessageCreate;
+    once = false;
+    async execute(message: Message) {
         if (message.author.bot) return;
 
         const args = message.content.split(/\s+/);
-        const command = args.shift().toLowerCase();
+        const command = args.shift()?.toLowerCase();
 
         if (command === "!togglelinkcleanup") {
+            if (message.member == null) return;
             if (message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-                let server = global.db.servers.find(server => server.server_id === message.guild.id);
+                let server = global.db.servers.find(server => server.server_id === message.guild?.id);
                 if (!server) {
                     await message.reply("Please use !initServer to register the server in the database")
                     return;
@@ -27,5 +30,5 @@ export default {
                 await message.reply("You don't have permission to use this command.");
             }
         }
-    },
+    }
 };

@@ -2,6 +2,9 @@
 node_modules
 package-lock.json
 
+# TypeScript Stuff
+compiled-ts/
+
 # User Stuff
 user_modules
 config.json
