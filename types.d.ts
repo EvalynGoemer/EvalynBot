@@ -10,6 +10,8 @@ declare global {
     var client: Client
     var config: config;
     var db: jsonDatabase;
+    var messageLogBuffer: string[];
+    var messageLogBufferMax: number;
 
     export interface config {
         skipStartupDelay: boolean;
@@ -30,6 +32,7 @@ declare global {
     export interface discordServer {
         server_id: string;
         linkCleanupEnabled?: bool;
+        logging_channel_id?: string;
         starboard_channel_id?: string;
         starboard_reaction_threshold?: number;
         starboard_emoji_id?: string;

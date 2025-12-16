@@ -147,5 +147,8 @@ for (const filePath of modulesFiles) {
     }
 }
 
+global.messageLogBuffer = [];
+global.messageLogBufferMax = 5000;
+
 client.login(config.token);
 global.client = client

@@ -19,6 +19,7 @@ export default class Help implements botModule {
 /repost {text} - Reposts whatever you type (More limited than the text based version)
 /init_server - Sets up server to be used with bot
 /toggle_link_cleanup - Enables and disables cleanup of links to remove tracking and improve embeding
+/setup_logging ?{channel} - Setup the logging module to output to a channel. If {channel} is empty disable logging
 /setup_reaction_role {reaction_role_message_id} {reaction_role_role_id} {reaction_role_emoji} - Sets up a reaction role
 /setup_starboard {starboard_channel_id} {starboard_emoji} {starboard_reaction_threshold} -  Sets up the starboard
 ===== ADMIN TEXT COMMANDS =====

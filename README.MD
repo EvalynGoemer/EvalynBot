@@ -10,7 +10,7 @@ Modules designed for your own personal instance should be in `/user_modules`
 
 ## Running the bot
 Copy `config.json` and `db.json` from `/templates` to the root directory of the bot
-Put your bot token into `config.json` and fill in anything extra you might need
+Put your bot token and bot client id into `config.json` and fill in anything extra you might need
 
 Run `npm install` to download the libraries needed to run as follows
 - `discord.js`
@@ -33,6 +33,7 @@ The following features / modules are included
 - Help Command
 - Levels
 - Link Cleanup
+- Logging Deleted & Edited Messages
 - Purge Messages
 - Reaction Roles
 - Repost Message as Bot

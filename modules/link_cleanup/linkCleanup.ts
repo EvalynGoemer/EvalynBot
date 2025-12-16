@@ -102,7 +102,7 @@ function URLSanitizer(text: string) {
 
 export default class LinkCleanup implements botModule {
     name = "LinkCleanup";
-    version = "1.0";
+    version = "1.1";
     type = Events.MessageCreate;
     once = false;
     async execute(message: Message) {
@@ -118,6 +118,8 @@ export default class LinkCleanup implements botModule {
         if (server.linkCleanupEnabled == true) {
             const sanitizedContent = URLSanitizer(message.content);
             if (sanitizedContent !== message.content) {
+                global.messageLogBuffer.push(message.content)
+                if (global.messageLogBuffer.length > global.messageLogBufferMax) global.messageLogBuffer.shift();
                 await message.delete();
                 if (!(message.channel instanceof TextChannel)) return;
                 await message.channel.send({
