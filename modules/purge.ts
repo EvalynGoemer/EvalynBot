@@ -2,7 +2,7 @@ import { PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction, 
 
 export default class Purge implements botModule {
     name = "Purge";
-    version = "1.2";
+    version = "1.3";
     type = null;
     once = false;
     slashCommand = new SlashCommandBuilder()
@@ -13,7 +13,7 @@ export default class Purge implements botModule {
     .setContexts(InteractionContextType.Guild);
     async execute(interaction: ChatInputCommandInteraction) {
         if (!(interaction.channel instanceof TextChannel)) return;
-        const deletedMessages = await interaction.channel.bulkDelete(interaction.options.getNumber("number")!, true);
+        const deletedMessages = await interaction.channel.bulkDelete(Math.trunc(interaction.options.getNumber("number")!), true);
         interaction.reply(`Successfully deleted ${deletedMessages.size} messages.`).then((msg) => setTimeout(() => msg.delete(), 5000));
     }
 };

@@ -2,7 +2,7 @@ import { Events, User, MessageReaction } from 'discord.js';
 
 export default class ReactionRolesAdd implements botModule {
     name = "ReactionRolesAdd";
-    version = "1.0"
+    version = "1.1"
     type = Events.MessageReactionAdd;
     once = false;
     async execute(reaction: MessageReaction, user: User) {
@@ -21,6 +21,10 @@ export default class ReactionRolesAdd implements botModule {
         if (reactionRole == null) return;
         const role = guild.roles.cache.get(reactionRole.role_id);
         if (role == null) return;
-        await member.roles.add(role)
+        // role still may be invalid after this check
+        // aswell .catch() does not seem to work so i have to use a try catch
+        try {
+            await member.roles.add(role).catch();
+        } catch (_) {}
     }
 };

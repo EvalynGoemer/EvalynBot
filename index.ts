@@ -10,9 +10,7 @@ import { setMaxListeners } from 'events';
 
 setMaxListeners(100)
 
-const originalLog = console.log;
-
-console.log = function(...args) {
+function generateFormatedTimestamp(): String {
     const date = new Date()
 
     const timestamp = new Intl.DateTimeFormat('en-CA', {
@@ -25,23 +23,45 @@ console.log = function(...args) {
         hourCycle: 'h23'
     }).format(date).replace(',', '');
 
-    originalLog.apply(console, [`[${timestamp}]`, ...args]);
+    return timestamp;
+}
+
+const originalLog = console.log;
+console.log = function (...args) {
+    originalLog.apply(console, [`[${generateFormatedTimestamp()}]`, ...args]);
+};
+
+const originalInfo = console.info;
+console.info = function (...args) {
+    originalInfo.apply(console, [`\x1b[94m[${generateFormatedTimestamp()}] INFO:\x1b[0m`, ...args]);
+};
+
+const originalWarn = console.warn;
+console.warn = function (...args) {
+    originalWarn.apply(console, [`\x1b[33m[${generateFormatedTimestamp()}] WARNING:\x1b[0m`, ...args]);
+};
+
+const originalError = console.error;
+console.error = function (...args) {
+    originalError.apply(console, [`\x1b[31m[${generateFormatedTimestamp()}] ERROR:\x1b[0m`, ...args]);
+};
+
+const originalDebug = console.debug;
+console.debug = function (...args) {
+    originalDebug.apply(console, [`\x1b[92m[${generateFormatedTimestamp()}] DEBUG:\x1b[0m`, ...args]);
 };
 
 function blockingWait(seconds: number) {
     const start = Date.now();
     while (Date.now() - start < seconds * 1000) {
     }
-
 }
-
+if (!config.skipStartupDelay) {
 for (let i = 10; i != 0; i--) {
     console.log("Starting in " + i + " seconds.")
-    if (!config.skipStartupDelay) {
-        blockingWait(1);
+    blockingWait(1);
     }
 }
-
 try {
     const raw = fs.readFileSync("./db.json", 'utf8');
     global.db = JSON.parse(raw);

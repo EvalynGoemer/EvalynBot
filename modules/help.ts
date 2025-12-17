@@ -22,6 +22,9 @@ export default class Help implements botModule {
 /setup_logging ?{channel} - Setup the logging module to output to a channel. If {channel} is empty disable logging
 /setup_reaction_role {reaction_role_message_id} {reaction_role_role_id} {reaction_role_emoji} - Sets up a reaction role
 /setup_starboard {starboard_channel_id} {starboard_emoji} {starboard_reaction_threshold} -  Sets up the starboard
+/configure_levels info - Prints info about level roles & server xp multiplier
+/configure_levels mult {mult} - Sets the servers XP multiplier
+/configure_levels roles {lvl} {role} ?{delete} - Makes it when a person gets level {lvl} they get the role {role}. If delete is true delete the entry
 ===== ADMIN TEXT COMMANDS =====
 !repost - Reposts whatever you type (Supports Multible Lines & Images)
 `)

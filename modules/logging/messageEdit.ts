@@ -2,7 +2,7 @@ import { Events, Message, EmbedBuilder, TextChannel } from 'discord.js';
 
 export default class Ready implements botModule {
     name = "MessageEditLogger";
-    version = "1.0";
+    version = "1.1";
     type = Events.MessageUpdate;
     once = false;
     async execute(...args: any[]) {
@@ -12,7 +12,14 @@ export default class Ready implements botModule {
         if (!oldMessage || !newMessage) return;
         if (!(oldMessage instanceof Message) || !(newMessage instanceof Message)) return;
 
+        if(oldMessage.partial) return;
+        if(newMessage.partial) return;
+
         if (newMessage.author.bot) return;
+
+        if (oldMessage.content == newMessage.content) {
+            return;
+        }
 
         const server = global.db.servers.find(server => server.server_id === newMessage.guild?.id)
 

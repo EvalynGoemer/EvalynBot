@@ -31,6 +31,8 @@ declare global {
 
     export interface discordServer {
         server_id: string;
+        xpMult?: number;
+        xpMilestones?: Record<number, string>;
         linkCleanupEnabled?: bool;
         logging_channel_id?: string;
         starboard_channel_id?: string;
@@ -53,6 +55,8 @@ declare global {
     export interface discordUser {
         id: string;
         xp: number;
+        lvl?: number | string;
+        xpMilestonesObtained?: Record<string, bool>;
         lastMessageThatGaveXpTimestamp: number;
     }
 
