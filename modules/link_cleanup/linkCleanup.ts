@@ -9,7 +9,8 @@ function URLSanitizer(text: string) {
         "utm_term",
         "utm_content",
         "utm_name",
-        "share_id"
+        "share_id",
+        "igsh"
     ]);
 
     const DOMAIN_BLOCKED_PARAMS = {
@@ -23,7 +24,9 @@ function URLSanitizer(text: string) {
         "x.com": "fixupx.com",
         "twitter.com": "fixupx.com",
         "vxtwitter.com": "fixupx.com",
-        "tiktok.com": "vxtiktok.com",
+        "tiktok.com": "tnktok.com",
+        "vxtiktok.com": "tnktok.com",
+        // todo; find a better service; seems to break sometimes
         "instagram.com": "vxinstagram.com",
         "reddit.com": "vxreddit.com",
     };
